@@ -34,6 +34,12 @@ NtQueryVirtualMemory(
     _Out_opt_ PSIZE_T ReturnLength
 );
 
+
+NTSYSAPI NTSTATUS NtUnmapViewOfSection(
+    HANDLE ProcessHandle,
+    PVOID  BaseAddress
+);
+
 #define STATUS_BUFFER_OVERFLOW           ((NTSTATUS)0x80000005L)
 
 typedef struct _UNICODE_STRING
@@ -42,3 +48,16 @@ typedef struct _UNICODE_STRING
     USHORT MaximumLength;
     _Field_size_bytes_part_(MaximumLength, Length) PWCH Buffer;
 } UNICODE_STRING, * PUNICODE_STRING;
+
+typedef const UNICODE_STRING* PCUNICODE_STRING;
+
+NTSYSAPI VOID RtlInitUnicodeString(
+    PUNICODE_STRING         DestinationString,
+    __drv_aliasesMem PCWSTR SourceString
+);
+
+NTSYSAPI LONG RtlCompareUnicodeString(
+    PCUNICODE_STRING String1,
+    PCUNICODE_STRING String2,
+    BOOLEAN          CaseInSensitive
+);

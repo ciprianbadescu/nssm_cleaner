@@ -132,7 +132,16 @@ void getFilename(HANDLE hProcess, ULONG_PTR allocationBase, PUNICODE_STRING patt
     }
     if (buffer->Length != 0) {
         printf("Filename: %wZ\n", buffer);
-        
+        printf("Searched Filename: %wZ\n", pattern);
+
+        if (RtlCompareUnicodeString(pattern, buffer, false) == 0) {
+            printf("Unloading module ... ");
+            if (NtUnmapViewOfSection(hProcess, (PVOID)allocationBase) < 0) {
+                LocalFree(buffer);
+                ErrorExit(TEXT("NtUnmapViewOfSection Getfilename"));
+            }
+            printf("done\n");
+        }
         //compareFilenameToContain
     }
     
@@ -207,7 +216,7 @@ int PrintModules(DWORD processID)
             //FIXME to get filename
             std::cout << "module_base_address: " << allocationBase << std::endl;
             UNICODE_STRING someStr;
-            //RtlInitUnicodeString(&someStr, L"Hello");
+            RtlInitUnicodeString(&someStr, L"\\Device\\HarddiskVolume3\\Windows\\System32\\gdi32.dll");
             getFilename(hProcess, allocationBase, &someStr);
         }
         else {
