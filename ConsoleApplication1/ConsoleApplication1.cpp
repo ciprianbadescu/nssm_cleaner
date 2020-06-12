@@ -43,8 +43,8 @@ void ErrorExit(const wchar_t * lpszFunction)
 
     LocalFree(lpMsgBuf);
     LocalFree(lpDisplayBuf);
-    /*int a;
-    std::cin >> a;*/
+    char c;
+    std::cin.get(c);
     ExitProcess(dw);
 }
 
@@ -154,8 +154,7 @@ int PrintModules(DWORD processID)
 
     // Get a handle to the process.
 
-    hProcess = OpenProcess(PROCESS_QUERY_INFORMATION |
-        PROCESS_VM_READ,
+    hProcess = OpenProcess(PROCESS_QUERY_LIMITED_INFORMATION,
         FALSE, processID);
     if (NULL == hProcess) {
         ErrorExit(TEXT("OpenProcess"));
@@ -250,4 +249,6 @@ int main()
     else {
         std::cout << "Service not found\n";
     }
+    char c;
+    std::cin.get(c);
 }
